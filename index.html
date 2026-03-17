@@ -25,18 +25,17 @@
             scroll-behavior: smooth;
         }
 
-        /* شريط علوي لعداد رمضان */
+        /* الشريط العلوي المعدل */
         .top-bar {
             background: rgba(212, 175, 55, 0.1);
             color: var(--gold);
             text-align: center;
-            padding: 10px;
-            font-size: 0.9rem;
+            padding: 12px;
+            font-size: 1rem;
             border-bottom: 1px solid rgba(212, 175, 55, 0.2);
             font-weight: bold;
         }
 
-        /* Hero Section */
         header {
             background: radial-gradient(circle at top, var(--green-accent), var(--dark-bg));
             padding: 60px 20px;
@@ -55,7 +54,6 @@
         h1 { font-size: 2.8rem; margin: 0; color: var(--gold); font-weight: 900; }
         .subtitle { font-size: 1.2rem; opacity: 0.8; margin: 10px 0 20px; }
         
-        /* منطقة الآيات المتغيرة */
         .quran-box {
             min-height: 60px;
             margin-bottom: 30px;
@@ -74,7 +72,6 @@
         }
         .quran-verse.active { display: block; opacity: 0.9; }
 
-        /* Buttons */
         .btn-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
         .btn {
             padding: 15px 35px;
@@ -91,7 +88,6 @@
         .btn-support { background: transparent; color: #25D366; border: 2px solid #25D366; }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
 
-        /* شبكة الأقسام الـ 20 */
         .sections-container { padding: 60px 20px; max-width: 1200px; margin: 0 auto; text-align: center; }
         .sections-grid {
             display: grid;
@@ -105,13 +101,11 @@
             border-radius: 20px;
             border: 1px solid rgba(212,175,55,0.05);
             transition: 0.3s;
-            cursor: default;
         }
         .section-box:hover { border-color: var(--gold); transform: translateY(-5px); background: #222d29; }
         .section-box i { font-size: 1.8rem; color: var(--gold); margin-bottom: 12px; display: block; }
         .section-box span { font-size: 0.85rem; font-weight: bold; color: #fff; }
 
-        /* Slider & Features */
         .showcase { padding: 60px 0; background: rgba(255,255,255,0.02); }
         .slider { display: flex; overflow-x: auto; gap: 20px; padding: 20px 40px; scroll-snap-type: x mandatory; }
         .slider img { height: 500px; border-radius: 25px; border: 2px solid rgba(212, 175, 55, 0.2); scroll-snap-align: center; }
@@ -120,16 +114,13 @@
         .feat-card { background: var(--card-bg); padding: 40px; border-radius: 30px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
         .feat-card i { font-size: 2.5rem; color: var(--gold); margin-bottom: 20px; }
 
-        .faq { padding: 60px 20px; max-width: 800px; margin: 0 auto; }
-        .faq-item { background: var(--card-bg); padding: 20px; border-radius: 15px; margin-bottom: 15px; border-right: 4px solid var(--gold); text-align: right; }
-
         footer { text-align: center; padding: 50px 20px; background: #080d0c; border-top: 1px solid rgba(212, 175, 55, 0.1); }
         .copy { opacity: 0.6; font-size: 0.85rem; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="top-bar" id="ramadan-countdown">جاري تحميل موعد رمضان...</div>
+    <div class="top-bar">تطبيق آيات | صدقة جارية للأهل والأقارب ✨</div>
 
     <header>
         <img src="https://i.postimg.cc/Kj83n97t/Picsart-26-03-16-14-57-26-508.jpg" class="main-logo" alt="Ayat Logo">
@@ -216,11 +207,10 @@
 
     <footer>
         <p>بنيت بكل حب لتكون رفيقك في طريق الله</p>
-        <div class="copy">تطبيق آيات &copy; 2026 | مبرمج بواسطة مصطفى إسماعيل</div>
+        <div class="copy">تطبيق آيات &copy; 2026 | مبرمج بواسطة مصطفى جادو</div>
     </footer>
 
     <script>
-        // كود تبديل الآيات كل 5 ثواني
         let currentVerse = 0;
         const verses = document.querySelectorAll('.quran-verse');
         function rotateVerses() {
@@ -229,23 +219,6 @@
             verses[currentVerse].classList.add('active');
         }
         setInterval(rotateVerses, 5000);
-
-        // عداد رمضان لعام 2026 (تاريخ تقريبي: 18 فبراير 2026)
-        function updateRamadan() {
-            const ramadanDate = new Date('February 18, 2026 00:00:00').getTime();
-            const now = new Date().getTime();
-            const diff = ramadanDate - now;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const element = document.getElementById('ramadan-countdown');
-            if (days > 0) {
-                element.innerHTML = `متبقي ${days} يوم على شهر رمضان المبارك 🌙`;
-            } else if (days > -30) {
-                element.innerHTML = `رمضان مبارك! تقبل الله منا ومنكم 🌙`;
-            } else {
-                element.innerHTML = `تطبيق آيات | رفيقك في العبادة`;
-            }
-        }
-        updateRamadan();
     </script>
 </body>
 </html>
