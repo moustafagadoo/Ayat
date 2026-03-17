@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق آيات | الرفيق المسلم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --dark-bg: #0f1715;
+            --card-bg: #1a2421;
+            --gold: #d4af37;
+            --gold-gradient: linear-gradient(135deg, #d4af37, #f1c40f);
+            --text-light: #e0e0e0;
+            --green-accent: #1a3c34;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            margin: 0;
+            scroll-behavior: smooth;
+        }
+
+        /* شريط علوي لعداد رمضان */
+        .top-bar {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        header {
+            background: radial-gradient(circle at top, var(--green-accent), var(--dark-bg));
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .main-logo {
+            width: 140px;
+            border-radius: 35px;
+            border: 3px solid var(--gold);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            margin-bottom: 25px;
+        }
+
+        h1 { font-size: 2.8rem; margin: 0; color: var(--gold); font-weight: 900; }
+        .subtitle { font-size: 1.2rem; opacity: 0.8; margin: 10px 0 20px; }
+        
+        /* منطقة الآيات المتغيرة */
+        .quran-box {
+            min-height: 60px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .quran-verse { 
+            font-style: italic; 
+            color: var(--gold); 
+            font-size: 1.3rem;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: none;
+            line-height: 1.6;
+        }
+        .quran-verse.active { display: block; opacity: 0.9; }
+
+        /* Buttons */
+        .btn-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        .btn {
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.4s;
+            font-size: 1rem;
+        }
+        .btn-store { background: var(--gold-gradient); color: #000; }
+        .btn-support { background: transparent; color: #25D366; border: 2px solid #25D366; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+
+        /* شبكة الأقسام الـ 20 */
+        .sections-container { padding: 60px 20px; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 15px;
+            margin-top: 40px;
+        }
+        .section-box {
+            background: var(--card-bg);
+            padding: 20px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(212,175,55,0.05);
+            transition: 0.3s;
+            cursor: default;
+        }
+        .section-box:hover { border-color: var(--gold); transform: translateY(-5px); background: #222d29; }
+        .section-box i { font-size: 1.8rem; color: var(--gold); margin-bottom: 12px; display: block; }
+        .section-box span { font-size: 0.85rem; font-weight: bold; color: #fff; }
+
+        /* Slider & Features */
+        .showcase { padding: 60px 0; background: rgba(255,255,255,0.02); }
+        .slider { display: flex; overflow-x: auto; gap: 20px; padding: 20px 40px; scroll-snap-type: x mandatory; }
+        .slider img { height: 500px; border-radius: 25px; border: 2px solid rgba(212, 175, 55, 0.2); scroll-snap-align: center; }
+        
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 60px 40px; max-width: 1200px; margin: 0 auto; }
+        .feat-card { background: var(--card-bg); padding: 40px; border-radius: 30px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .feat-card i { font-size: 2.5rem; color: var(--gold); margin-bottom: 20px; }
+
+        .faq { padding: 60px 20px; max-width: 800px; margin: 0 auto; }
+        .faq-item { background: var(--card-bg); padding: 20px; border-radius: 15px; margin-bottom: 15px; border-right: 4px solid var(--gold); text-align: right; }
+
+        footer { text-align: center; padding: 50px 20px; background: #080d0c; border-top: 1px solid rgba(212, 175, 55, 0.1); }
+        .copy { opacity: 0.6; font-size: 0.85rem; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar" id="ramadan-countdown">جاري تحميل موعد رمضان...</div>
+
+    <header>
+        <img src="https://i.postimg.cc/Kj83n97t/Picsart-26-03-16-14-57-26-508.jpg" class="main-logo" alt="Ayat Logo">
+        <h1>تطبيق آيات</h1>
+        <p class="subtitle">رفيقك المسلم | صدقة جارية | بدون إعلانات</p>
+        
+        <div class="quran-box">
+            <span class="quran-verse active">"فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ"</span>
+            <span class="quran-verse">"أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ"</span>
+            <span class="quran-verse">"إِنَّ مَعَ الْعُسْرِ يُسْرًا"</span>
+            <span class="quran-verse">"وَقُل رَّبِّ زِدْنِي عِلْمًا"</span>
+            <span class="quran-verse">"وَإِذَا سَأَلَكَ عِبَادِي عَنِّي فَإِنِّي قَرِيبٌ"</span>
+            <span class="quran-verse">"رَبِّ اجْعَلْنِي مُقِيمَ الصَّلَاةِ وَمِن ذُرِّيَّتِي"</span>
+            <span class="quran-verse">"وَاسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ"</span>
+            <span class="quran-verse">"لَئِن شَكَرْتُمْ لَأَزِيدَنَّكُمْ"</span>
+            <span class="quran-verse">"وَتزوَّدوا فإنَّ خيرَ الزَّادِ التَّقوى"</span>
+            <span class="quran-verse">"ادْعُونِي أَسْتَجِبْ لَكُمْ"</span>
+        </div>
+        
+        <div class="btn-group">
+            <a href="https://play.google.com/store/apps/details?id=com.ayataleslam.app" target="_blank" class="btn btn-store">
+                <i class="fab fa-google-play"></i> تحميل من Google Play
+            </a>
+            <a href="https://wa.me/201278994399" target="_blank" class="btn btn-support">
+                <i class="fab fa-whatsapp"></i> الدعم الفني والمشاركة
+            </a>
+        </div>
+    </header>
+
+    <section class="sections-container">
+        <h2 style="color: var(--gold);">أقسام التطبيق الشاملة (20 قسم)</h2>
+        <div class="sections-grid">
+            <div class="section-box"><i class="fas fa-quran"></i><span>القرآن</span></div>
+            <div class="section-box"><i class="fas fa-layer-group"></i><span>الأذكار</span></div>
+            <div class="section-box"><i class="fas fa-book-open"></i><span>الأحاديث</span></div>
+            <div class="section-box"><i class="fas fa-clock"></i><span>المواقيت</span></div>
+            <div class="section-box"><i class="fas fa-users-viewfinder"></i><span>قصص</span></div>
+            <div class="section-box"><i class="fas fa-hands-praying"></i><span>الأدعية</span></div>
+            <div class="section-box"><i class="fas fa-compass"></i><span>القبلة</span></div>
+            <div class="section-box"><i class="fas fa-hand-holding-heart"></i><span>الزكاة</span></div>
+            <div class="section-box"><i class="fas fa-calendar-alt"></i><span>التقويم</span></div>
+            <div class="section-box"><i class="fas fa-moon"></i><span>رمضان</span></div>
+            <div class="section-box"><i class="fas fa-users"></i><span>المجتمع</span></div>
+            <div class="section-box"><i class="fas fa-book"></i><span>المكتبة</span></div>
+            <div class="section-box"><i class="fas fa-balance-scale"></i><span>المواريث</span></div>
+            <div class="section-box"><i class="fas fa-toggle-on"></i><span>التسبيح</span></div>
+            <div class="section-box"><i class="fas fa-cloud-moon"></i><span>الأحلام</span></div>
+            <div class="section-box"><i class="fas fa-microphone"></i><span>صوتيات</span></div>
+            <div class="section-box"><i class="fas fa-kaaba"></i><span>النسك</span></div>
+            <div class="section-box"><i class="fas fa-question-circle"></i><span>المسابقة</span></div>
+            <div class="section-box"><i class="fas fa-envelope"></i><span>رسائل</span></div>
+            <div class="section-box"><i class="fas fa-info-circle"></i><span>نبذة عنا</span></div>
+        </div>
+    </section>
+
+    <section class="showcase">
+        <h2 style="text-align: center; color: var(--gold);">واجهات من داخل التطبيق</h2>
+        <div class="slider">
+            <img src="https://i.postimg.cc/QMDtQ4hF/1000129941-(1).png">
+            <img src="https://i.postimg.cc/RhJ45K42/1000129954-(1).png">
+            <img src="https://i.postimg.cc/C11w7926/1000129975-(1).png">
+            <img src="https://i.postimg.cc/fLrDrBnZ/1000129977-(1).png">
+            <img src="https://i.postimg.cc/6Q67sjSr/1000129978-(1).png">
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feat-card">
+            <i class="fa-solid fa-bolt"></i>
+            <h3>تجربة سريعة</h3>
+            <p>تطبيق خفيف وسريع يعمل على كافة أجهزة الأندرويد بكفاءة عالية.</p>
+        </div>
+        <div class="feat-card">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h3>بدون إعلانات</h3>
+            <p>نضمن لك تجربة هادئة خالية من الإعلانات المزعجة تماماً.</p>
+        </div>
+        <div class="feat-card">
+            <i class="fa-solid fa-heart"></i>
+            <h3>صدقة جارية</h3>
+            <p>كل مستخدم يقرأ آية أو يذكر الله من خلال التطبيق هو أجر لك ولنا.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>بنيت بكل حب لتكون رفيقك في طريق الله</p>
+        <div class="copy">تطبيق آيات &copy; 2026 | مبرمج بواسطة مصطفى إسماعيل</div>
+    </footer>
+
+    <script>
+        // كود تبديل الآيات كل 5 ثواني
+        let currentVerse = 0;
+        const verses = document.querySelectorAll('.quran-verse');
+        function rotateVerses() {
+            verses[currentVerse].classList.remove('active');
+            currentVerse = (currentVerse + 1) % verses.length;
+            verses[currentVerse].classList.add('active');
+        }
+        setInterval(rotateVerses, 5000);
+
+        // عداد رمضان لعام 2026 (تاريخ تقريبي: 18 فبراير 2026)
+        function updateRamadan() {
+            const ramadanDate = new Date('February 18, 2026 00:00:00').getTime();
+            const now = new Date().getTime();
+            const diff = ramadanDate - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const element = document.getElementById('ramadan-countdown');
+            if (days > 0) {
+                element.innerHTML = `متبقي ${days} يوم على شهر رمضان المبارك 🌙`;
+            } else if (days > -30) {
+                element.innerHTML = `رمضان مبارك! تقبل الله منا ومنكم 🌙`;
+            } else {
+                element.innerHTML = `تطبيق آيات | رفيقك في العبادة`;
+            }
+        }
+        updateRamadan();
+    </script>
+</body>
+</html>
