@@ -17,15 +17,56 @@
             --green-accent: #1a3c34;
         }
 
+        body.light-mode {
+            --dark-bg: #fdfaf0;
+            --card-bg: #ffffff;
+            --text-light: #2c3e50;
+            --green-accent: #e8f0ed;
+            --gold: #b8860b;
+        }
+
         body {
             font-family: 'Tajawal', sans-serif;
             background-color: var(--dark-bg);
             color: var(--text-light);
             margin: 0;
             scroll-behavior: smooth;
+            transition: background-color 0.4s, color 0.4s;
         }
 
-        /* الشريط العلوي المعدل */
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 45px;
+            height: 45px;
+            background: var(--gold-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            color: #000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .tasbih-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--gold-gradient);
+            padding: 15px;
+            border-radius: 20px;
+            color: #000;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            z-index: 999;
+            cursor: pointer;
+            min-width: 70px;
+        }
+        .tasbih-float span { display: block; font-weight: 900; font-size: 1.4rem; }
+
         .top-bar {
             background: rgba(212, 175, 55, 0.1);
             color: var(--gold);
@@ -42,6 +83,24 @@
             text-align: center;
             border-bottom: 2px solid rgba(212, 175, 55, 0.2);
         }
+
+        .prayer-times {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .prayer-item {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 1px solid var(--gold);
+            min-width: 85px;
+            text-align: center;
+        }
+        .prayer-name { font-weight: bold; color: var(--gold); font-size: 0.85rem; display: block; margin-bottom: 4px; }
+        .prayer-time-val { font-size: 0.95rem; font-weight: 900; color: #fff; display: block; }
 
         .main-logo {
             width: 140px;
@@ -104,7 +163,7 @@
         }
         .section-box:hover { border-color: var(--gold); transform: translateY(-5px); background: #222d29; }
         .section-box i { font-size: 1.8rem; color: var(--gold); margin-bottom: 12px; display: block; }
-        .section-box span { font-size: 0.85rem; font-weight: bold; color: #fff; }
+        .section-box span { font-size: 0.85rem; font-weight: bold; color: inherit; }
 
         .showcase { padding: 60px 0; background: rgba(255,255,255,0.02); }
         .slider { display: flex; overflow-x: auto; gap: 20px; padding: 20px 40px; scroll-snap-type: x mandatory; }
@@ -115,10 +174,21 @@
         .feat-card i { font-size: 2.5rem; color: var(--gold); margin-bottom: 20px; }
 
         footer { text-align: center; padding: 50px 20px; background: #080d0c; border-top: 1px solid rgba(212, 175, 55, 0.1); }
+        .footer-links { margin-bottom: 15px; }
+        .footer-links a { color: var(--gold); text-decoration: none; margin: 0 10px; font-size: 0.9rem; font-weight: bold; }
         .copy { opacity: 0.6; font-size: 0.85rem; margin-top: 15px; }
     </style>
 </head>
 <body>
+
+    <div class="mode-toggle" onclick="document.body.classList.toggle('light-mode')">
+        <i class="fas fa-adjust"></i>
+    </div>
+
+    <div class="tasbih-float" onclick="countTasbih()">
+        <small>سبّح</small>
+        <span id="counter">0</span>
+    </div>
 
     <div class="top-bar">تطبيق آيات | صدقة جارية للأهل والأقارب ✨</div>
 
@@ -127,6 +197,14 @@
         <h1>تطبيق آيات</h1>
         <p class="subtitle">رفيقك المسلم | صدقة جارية | بدون إعلانات</p>
         
+        <div class="prayer-times" id="prayerTimes">
+            <div class="prayer-item"><span class="prayer-name">الفجر</span><span class="prayer-time-val" id="fajr">--:--</span></div>
+            <div class="prayer-item"><span class="prayer-name">الظهر</span><span class="prayer-time-val" id="dhuhr">--:--</span></div>
+            <div class="prayer-item"><span class="prayer-name">العصر</span><span class="prayer-time-val" id="asr">--:--</span></div>
+            <div class="prayer-item"><span class="prayer-name">المغرب</span><span class="prayer-time-val" id="maghrib">--:--</span></div>
+            <div class="prayer-item"><span class="prayer-name">العشاء</span><span class="prayer-time-val" id="isha">--:--</span></div>
+        </div>
+
         <div class="quran-box">
             <span class="quran-verse active">"فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ"</span>
             <span class="quran-verse">"أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ"</span>
@@ -206,11 +284,15 @@
     </section>
 
     <footer>
+        <div class="footer-links">
+            <a href="https://sites.google.com/view/ayat-muslimm/%D8%A7%D9%84%D8%B5%D9%81%D8%AD%D8%A9-%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%D8%A9?pli=1" target="_blank">سياسة الخصوصية</a>
+        </div>
         <p>بنيت بكل حب لتكون رفيقك في طريق الله</p>
         <div class="copy">تطبيق آيات &copy; 2026 | مبرمج بواسطة مصطفى جادو</div>
     </footer>
 
     <script>
+        // تدوير الآيات
         let currentVerse = 0;
         const verses = document.querySelectorAll('.quran-verse');
         function rotateVerses() {
@@ -219,6 +301,46 @@
             verses[currentVerse].classList.add('active');
         }
         setInterval(rotateVerses, 5000);
+
+        // وظيفة المسبحة
+        let count = 0;
+        function countTasbih() {
+            count++;
+            document.getElementById('counter').innerText = count;
+            if (navigator.vibrate) navigator.vibrate(50);
+        }
+
+        // جلب أوقات الصلاة الحقيقية بناءً على الموقع
+        async function getPrayerTimes() {
+            try {
+                // خطوة 1: معرفة مدينة المستخدم
+                const geoRes = await fetch('https://ipapi.co/json/');
+                const geoData = await geoRes.json();
+                
+                // خطوة 2: جلب المواقيت
+                const prayerRes = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${geoData.city}&country=${geoData.country}&method=5`);
+                const prayerData = await prayerRes.json();
+                const times = prayerData.data.timings;
+
+                // تحديث العناصر في الصفحة
+                document.getElementById('fajr').innerText = convertTo12Hour(times.Fajr);
+                document.getElementById('dhuhr').innerText = convertTo12Hour(times.Dhuhr);
+                document.getElementById('asr').innerText = convertTo12Hour(times.Asr);
+                document.getElementById('maghrib').innerText = convertTo12Hour(times.Maghrib);
+                document.getElementById('isha').innerText = convertTo12Hour(times.Isha);
+            } catch (error) {
+                console.log("Could not fetch prayer times, using fallback.");
+            }
+        }
+
+        function convertTo12Hour(time) {
+            let [hours, minutes] = time.split(':');
+            let ampm = hours >= 12 ? 'م' : 'ص';
+            hours = hours % 12 || 12;
+            return `${hours}:${minutes} ${ampm}`;
+        }
+
+        getPrayerTimes();
     </script>
 </body>
 </html>
